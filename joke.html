@@ -1,0 +1,60 @@
+<html>
+<head>
+<title>Random Joke</title>
+<style>
+  body { 
+    font-family:sans-serif; 
+    text-align:center; 
+    padding:40px; 
+    background:#f0f2f5; 
+        }
+  .joke-box { 
+    max-width:600px; 
+    margin:0 auto; 
+    background:#fff; 
+    padding:30px; 
+    border-radius:12px; 
+    box-shadow:0 4px 15px rgba(0,0,0,0.1); 
+       }
+  button { 
+    padding:10px 20px; 
+    border:none; 
+    border-radius:8px; 
+    background:#3498db; 
+    color:#fff; 
+    cursor:pointer; 
+    margin-top:20px; 
+    font-size:16px; 
+        }
+  button:hover { 
+    background:#2980b9; 
+          }
+  p { 
+    font-size:18px; 
+    margin:15px 0; 
+    }
+</style>
+</head>
+<body>
+<h2>Random Joke Generator</h2>
+<div class="joke-box">
+  <p id="setup">Click the button to get a joke!</p>
+  <p id="punchline"></p>
+  <button onclick="getJoke()">Get Joke 😂</button>
+</div>
+<script>
+async function getJoke() {
+  try {
+    const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+    const data = await res.json();
+    document.getElementById('setup').textContent = data.setup;
+    document.getElementById('punchline').textContent = data.punchline;
+  } catch (err) {
+    document.getElementById('setup').textContent = "Oops! Something went wrong.";
+    document.getElementById('punchline').textContent = "";
+    console.error(err);
+  }
+}
+</script>
+</body>
+</html>

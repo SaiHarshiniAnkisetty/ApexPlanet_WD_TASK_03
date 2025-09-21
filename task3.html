@@ -1,0 +1,106 @@
+<html>
+<head>
+<title>Quiz</title>
+<style>
+  body { 
+    font-family:sans-serif; 
+    text-align:center;
+    background:#f0f2f5; 
+    padding:20px; 
+     }
+  .quiz { 
+    max-width:500px; 
+    margin:20px auto; 
+    background:#fff; 
+    padding:20px; 
+    border-radius:12px; 
+    box-shadow:0 4px 15px rgba(0,0,0,0.1); 
+     }
+  h2 { 
+    color:#34495e; 
+    margin-bottom:15px; 
+     }
+  button { 
+    display:block; 
+    width:80%; 
+    margin:8px auto; 
+    padding:10px; 
+    border:none; 
+    border-radius:8px; 
+    background:#3498db; 
+    color:#fff; 
+    font-size:16px; 
+    cursor:pointer; 
+    transition:0.2s; 
+      }
+  button:hover { 
+    transform:translateY(-2px); 
+      }
+  .nav { 
+    margin-top:15px; 
+    display:flex; 
+    justify-content:space-between; 
+      }
+  #prev { background:#e67e22; width:45%; }
+  #next { background:#27ae60; width:45%; }
+  #result { margin-top:12px; font-weight:600; }
+</style>
+</head>
+<body>
+<h2>Interactive Quiz</h2>
+<div class="quiz">
+  <p id="q"></p>
+  <div id="opts"></div>
+  <div class="nav">
+    <button id="prev">⬅ Prev</button>
+    <button id="next">Next ➡</button>
+  </div>
+  <p id="result"></p>
+</div>
+
+<script>
+const data=[
+  {q:"1. What does HTML stand for?", o:["Hyper Text Markup Language","High Tech Modern Language","Hyper Transfer Markup Language"], a:"Hyper Text Markup Language"},
+  {q:"2. Which CSS property changes text color?", o:["font-color","text-color","color"], a:"color"},
+  {q:"3. Which HTML tag is used to insert an image?", o:["<img>","<image>","<pic>"], a:"<img>"},
+  {q:"4. Which JS keyword declares a variable?", o:["var","int","declare"], a:"var"},
+  {q:"5. What does DOM stand for?", o:["Document Object Model","Data Object Manager","Digital Ordinance Model"], a:"Document Object Model"}
+];
+
+let cur=0, ans=Array(data.length).fill(null);
+const qEl=document.getElementById('q'), oEl=document.getElementById('opts'), rEl=document.getElementById('result');
+
+function load(){
+  qEl.textContent=data[cur].q;
+  oEl.innerHTML="";
+  data[cur].o.forEach(opt=>{
+    const b=document.createElement('button');
+    b.textContent=opt;
+    if(ans[cur]===opt) b.style.background="#27ae60";
+    b.onclick=()=>select(opt,b);
+    oEl.appendChild(b);
+  });
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').textContent=cur===data.length-1?'Finish ➡':'Next ➡';
+  rEl.textContent=ans[cur]? (ans[cur]===data[cur].a?'✅ Correct!':'❌ Wrong! Correct: '+data[cur].a) : '';
+}
+
+function select(opt,btn){
+  ans[cur]=opt;
+  Array.from(oEl.children).forEach(b=>b.style.background=b===btn?"#27ae60":"#3498db");
+  rEl.textContent=opt===data[cur].a?'✅ Correct!':'❌ Wrong! Correct: '+data[cur].a;
+}
+
+document.getElementById('next').onclick=()=>{ 
+  if(cur<data.length-1){ cur++; load(); } 
+  else{
+    qEl.textContent="🎉 Quiz Completed!"; oEl.innerHTML=""; document.getElementById('prev').style.display='none'; document.getElementById('next').style.display='none';
+    rEl.textContent=`Score: ${ans.filter((a,i)=>a===data[i].a).length} / ${data.length}`;
+  }
+};
+document.getElementById('prev').onclick=()=>{ if(cur>0){ cur--; load(); }};
+
+load();
+</script>
+</body>
+</html>
